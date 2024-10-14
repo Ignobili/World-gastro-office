@@ -28,6 +28,7 @@ public class Task {
     @Setter
     private String description;
 
+
     @Setter
     @Column(name = "created_at")
     LocalDate timestamp;
@@ -35,4 +36,12 @@ public class Task {
     @Setter
     @Getter
     private String username;
+
+    @Getter
+    @Setter
+    private LocalDate workDate;
+
+    @Getter
+    @Setter
+    private int workedHours;
 }
