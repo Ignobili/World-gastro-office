@@ -12,7 +12,8 @@ public interface UsersService {
     ResponseEntity<String> registerUser(String username, String fullname, String password, Role role);
     ResponseEntity<String> loginUser(String username, String password);
     ResponseEntity<String> logoutUser(String username);
-    ResponseEntity<String> deleteUser(String username);
+    ResponseEntity<String> deleteUser(String username,String loggedUsername);
+    Role getRole(String username);
 
     List<Users> getAll();
 }

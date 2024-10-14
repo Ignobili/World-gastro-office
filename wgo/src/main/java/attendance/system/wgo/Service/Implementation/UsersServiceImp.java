@@ -21,6 +21,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static attendance.system.wgo.enums.Role.*;
+
 @Service
 public class UsersServiceImp implements UsersService {
 
@@ -94,28 +96,34 @@ public class UsersServiceImp implements UsersService {
     }
 
     @Override
-    public ResponseEntity<String> deleteUser(String username) {
-        try {
+    public ResponseEntity<String> deleteUser(String username, String loggedUsername) {
 
+        try {
             // Check if the user exists
             Users user = userRepository.findByUsername(username);
             if (user == null) {
                 return ResponseEntity.internalServerError().body("Použivateľ: %s neexistuje".formatted(username));
             }
-
             // Delete the user
-            userRepository.deleteById(user.getUserId());
-            return ResponseEntity.ok().body("Používateľ %s úspešne vymazaný".formatted(username));
+
+                Users users = userRepository.findByUsername(loggedUsername);
+            System.out.println(users.getRole());
+                if (users.getRole() != EMPLOYEE && tokenStore.containsKey(loggedUsername)) {
+                    userRepository.deleteById(user.getUserId());
+                    return ResponseEntity.ok().body("Používateľ %s úspešne vymazaný".formatted(username));
+                }
+                return ResponseEntity.internalServerError().body("Nemáte oprávnenie na vymazanie používateľa");
 
         } catch (Exception exception) {
             return ResponseEntity.internalServerError().body("Chyba pri vymazaní používateľa");
         }
+
     }
 
     @Override
     public List<Users> getAll() {
         System.out.println(tokenStore);
-        return (List<Users>) userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public ResponseEntity<String> logoutUser(String username) {
@@ -135,4 +143,9 @@ public class UsersServiceImp implements UsersService {
         }
     }
 
+
+    public Role getRole(String username) {
+        Users users = userRepository.findByUsername(username);
+        return users.getRole();
+    }
 }

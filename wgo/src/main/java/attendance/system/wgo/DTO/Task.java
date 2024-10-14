@@ -43,5 +43,5 @@ public class Task {
 
     @Getter
     @Setter
-    private int workedHours;
+    private int workedMinutes;
 }

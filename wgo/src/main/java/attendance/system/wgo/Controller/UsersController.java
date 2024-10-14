@@ -1,6 +1,7 @@
 package attendance.system.wgo.Controller;
 
 import attendance.system.wgo.DTO.Users;
+import attendance.system.wgo.Repository.UserRepository;
 import attendance.system.wgo.Service.UsersService;
 import attendance.system.wgo.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ public class UsersController {
 
     @Autowired
     UsersService usersService;
+
+
+    UserRepository userRepository;
+
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestParam String username, @RequestParam String fullname, @RequestParam String password, @RequestParam String role) {
@@ -34,9 +39,9 @@ public class UsersController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestParam String username){
+    public ResponseEntity<String> deleteUser(@RequestParam String deleteUsername, @RequestParam String loggedUsername) {
 
-        return  usersService.deleteUser(username);
+        return  usersService.deleteUser(deleteUsername,loggedUsername);
     }
     @GetMapping("/all")
     public List<Users> getAll(){
