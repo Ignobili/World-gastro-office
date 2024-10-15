@@ -99,6 +99,7 @@ public class UsersServiceImp implements UsersService {
     public ResponseEntity<String> deleteUser(String username, String loggedUsername) {
 
         try {
+            if(username.equals(loggedUsername)){
             // Check if the user exists
             Users user = userRepository.findByUsername(username);
             if (user == null) {
@@ -106,16 +107,22 @@ public class UsersServiceImp implements UsersService {
             }
             // Delete the user
 
-                Users users = userRepository.findByUsername(loggedUsername);
-            System.out.println(users.getRole());
-                if (users.getRole() != EMPLOYEE && tokenStore.containsKey(loggedUsername)) {
+            Users users = userRepository.findByUsername(loggedUsername);
+            if (tokenStore.containsKey(users.getUsername())) {
+                if (users.getRole() != EMPLOYEE) {
                     userRepository.deleteById(user.getUserId());
-                    return ResponseEntity.ok().body("Používateľ %s úspešne vymazaný".formatted(username));
+                    return ResponseEntity.ok().body("Používateľ %s úspešne vymazaný!".formatted(username));
+                } else {
+                    return ResponseEntity.internalServerError().body("Nemáte oprávnenie na vymazanie používateľa!");
                 }
-                return ResponseEntity.internalServerError().body("Nemáte oprávnenie na vymazanie používateľa");
-
+            } else {
+                return ResponseEntity.internalServerError().body("Používateľ nie je prihlásený!");
+            }
+        } else {
+                return ResponseEntity.internalServerError().body("Nemôžete seba vymazať!");
+            }
         } catch (Exception exception) {
-            return ResponseEntity.internalServerError().body("Chyba pri vymazaní používateľa");
+            return ResponseEntity.internalServerError().body("Chyba pri vymazaní používateľa!");
         }
 
     }
