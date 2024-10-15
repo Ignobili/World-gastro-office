@@ -151,7 +151,7 @@ public class UsersServiceImp implements UsersService {
     }
 
 
-    public Role getRole(String username) {
+    private Role getRole(String username) {
         Users users = userRepository.findByUsername(username);
         return users.getRole();
     }
