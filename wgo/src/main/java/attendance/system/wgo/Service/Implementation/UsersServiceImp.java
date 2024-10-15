@@ -99,7 +99,7 @@ public class UsersServiceImp implements UsersService {
     public ResponseEntity<String> deleteUser(String username, String loggedUsername) {
 
         try {
-            if(username.equals(loggedUsername)){
+            if(!username.equals(loggedUsername)){
             // Check if the user exists
             Users user = userRepository.findByUsername(username);
             if (user == null) {
